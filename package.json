@@ -1,0 +1,35 @@
+{
+  "name": "cordova-wifi-plugin",
+  "version": "1.0.0",
+  "description": "Cordova wifi access points discover and connection management plugin",
+  "main": "www/WifiManagerPlugin.js",
+  "author": "Geraldo Lima / Artur Farias",
+  "license": "MIT",
+  "cordova": {
+    "id": "cordova-wifi-plugin",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JGeraldoLima/cordova-wifi-plugin.git"
+  },
+  "keywords": [
+    "wifi",
+    "access-point",
+    "connection",
+    "ionic",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "bugs": {
+    "url": "https://github.com/JGeraldoLima/cordova-wifi-plugin/issues"
+  },
+  "homepage": "https://github.com/JGeraldoLima/cordova-wifi-plugin",
+  "scripts": {
+    "start": "node scripts/prepareSpec.js"
+  }
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-wifi-plugin" version="1.0.0">
+  <name>Cordova Wifi plugin</name>
+  <description>Cordova wifi access points discover and connection management plugin</description>
+  <author>Geraldo Lima / Artur Farias</author>
+  <license>MIT</license>
+  <keywords>wifi,access-point,connection,ionic,ecosystem:cordova,cordova-android,cordova-ios</keywords>
+
+  <js-module name="CordovaWifiManager" src="www/WifiManagerPlugin.js">
+    <clobbers target="cordova.plugins.WifiManagerPlugin" />
+  </js-module>
+
+  <!-- android -->
+  <platform name="android">
+    <source-file src="src/android/AndroidWifiManager.java"
+                 target-dir="src/">
+    </source-file>
+
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="CordovaWifiManager">
+        <param name="android-package" value="wifiplugin.AndroidWifiManager" />
+      </feature>
+    </config-file>
+  </platform>
+
+  <!-- ios -->
+  <platform name="ios">
+    <source-file src="src/ios/iOSWifiManager.swift" />
+
+    <config-file target="config.xml" parent="/*">
+      <feature name="CordovaWifiManager">
+        <param name="ios-package" value="iOSWifiManager" />
+      </feature>
+    </config-file>
+  </platform>
+</plugin>
