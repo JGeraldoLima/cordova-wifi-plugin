@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="cordova-wifi-plugin" version="1.0.0">
+        id="cordova-wifi-plugin" version="1.0.1">
   <name>Cordova Wifi plugin</name>
   <description>Cordova wifi access points discover and connection management plugin</description>
   <author>Geraldo Lima / Artur Farias</author>
