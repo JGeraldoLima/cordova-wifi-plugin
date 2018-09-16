@@ -13,7 +13,7 @@
 
   <!-- android -->
   <platform name="android">
-    <source-file src="src/android/AndroidWifiManager.java"
+    <source-file src="src/android/wifiplugin/AndroidWifiManager.java"
                  target-dir="src/">
     </source-file>
 
