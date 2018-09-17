@@ -1,6 +1,6 @@
 {
   "name": "cordova-wifi-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Cordova wifi access points discover and connection management plugin",
   "main": "www/WifiManagerPlugin.js",
   "author": "Geraldo Lima / Artur Farias",
