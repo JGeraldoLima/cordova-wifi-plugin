@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      cordova wifi plugin sample
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list no-lines>
+    <button ion-item *ngFor="let network of availableNetworks" (click)="selectedNetwork = network">
+      {{ network.ssid }}
+    </button>
+    <ion-item>
+      <ion-label fixed>Password</ion-label>
+      <ion-input type="password" text-center [(ngModel)]="password"></ion-input>
+    </ion-item>
+  </ion-list>
+</ion-content>

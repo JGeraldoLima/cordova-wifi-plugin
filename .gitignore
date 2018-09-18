@@ -1,0 +1,17 @@
+.ideia/
+samples/WifiPluginTests/node_modules
+
+samples/WifiPluginTests/.tmp
+samples/WifiPluginTests/.sass-cache
+samples/WifiPluginTests/platforms
+samples/WifiPluginTests/plugins
+samples/WifiPluginTests/*.swp
+samples/WifiPluginTests/*.swo
+samples/WifiPluginTests/*.log
+samples/WifiPluginTests/*.DS_Store
+samples/WifiPluginTests/.editorconfig
+samples/WifiPluginTests/.sourcemaps/main.js.map
+samples/WifiPluginTests/config.xml
+samples/WifiPluginTests/ionic.config.json
+samples/WifiPluginTests/package-lock.json
+samples/WifiPluginTests/package.json
