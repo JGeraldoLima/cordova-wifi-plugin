@@ -86,7 +86,7 @@ export class HomePage {
   private getWifiNetworksList = () => {
     //TODO: add loading
     this.getWiFiPlugin().startWifiScan((res) => {
-      console.log('LIST', res);
+      this.availableNetworks = res;
     }, (err) => {
       console.log('error', err);
     }, this.GET_NEW_NETWORKS_LIST_INTERVAL, this.skipEmptySSIDs);

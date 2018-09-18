@@ -1,10 +1,10 @@
 .ideia/
 samples/WifiPluginTests/node_modules
-
 samples/WifiPluginTests/.tmp
 samples/WifiPluginTests/.sass-cache
 samples/WifiPluginTests/platforms
 samples/WifiPluginTests/plugins
+samples/WifiPluginTests/www
 samples/WifiPluginTests/*.swp
 samples/WifiPluginTests/*.swo
 samples/WifiPluginTests/*.log
