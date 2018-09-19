@@ -7,13 +7,38 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list no-lines>
-    <button ion-item *ngFor="let network of availableNetworks" (click)="selectedNetwork = network">
-      {{ network.SSID }}
-    </button>
+  <ion-list no-lines *ngIf="availableNetworks.length > 0">
+    <ion-item *ngFor="let network of availableNetworks"
+              (click)="selectedNetwork = network">
+      <button ion-item [ngClass]="{'selected-network': selectedNetwork && network.BSSID === selectedNetwork.BSSID,
+      'non-selected-network' : !selectedNetwork || network.BSSID !== selectedNetwork.BSSID}">
+        {{ network.SSID }}
+      </button>
+    </ion-item>
     <ion-item>
       <ion-label fixed>Password</ion-label>
       <ion-input type="password" text-center [(ngModel)]="password"></ion-input>
     </ion-item>
+    <button ion-button [disabled]="!selectedNetwork || connectedToAccessPoint"
+            (click)="connect()">Connect
+    </button>
+    <button ion-button [disabled]="!connectedToAccessPoint" (click)="disconnect()">
+      Disconnect
+    </button>
   </ion-list>
+
+  <ion-label *ngIf="availableNetworks.length === 0">
+    No available networks at moment
+  </ion-label>
+
+  <button ion-button full (click)="getCurrentSSID()">Get current SSID</button>
+  <button ion-button full [disabled]="!scanStarted" (click)="getNetworksList()">Get
+    current list
+  </button>
+  <button ion-button full [disabled]="scanStarted" color="secondary"
+          (click)="startScan()">Start scan
+  </button>
+  <button ion-button full [disabled]="!scanStarted" color="danger"
+          (click)="stopWifiScan()">Stop scan
+  </button>
 </ion-content>

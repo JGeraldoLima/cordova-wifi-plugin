@@ -1,5 +1,11 @@
 import {Component} from '@angular/core';
-import {NavController, Platform, AlertController} from 'ionic-angular';
+import {
+  NavController,
+  Platform,
+  AlertController,
+  LoadingController,
+  ToastController
+} from 'ionic-angular';
 import {AndroidPermissions} from "@ionic-native/android-permissions";
 
 @Component({
@@ -7,6 +13,10 @@ import {AndroidPermissions} from "@ionic-native/android-permissions";
   templateUrl: 'home.html'
 })
 export class HomePage {
+
+  scanStarted: boolean = false;
+
+  connectedToAccessPoint: boolean = false;
 
   availableNetworks = [];
 
@@ -20,7 +30,7 @@ export class HomePage {
 
   private skipEmptySSIDs: boolean = true;
 
-  private GET_NEW_NETWORKS_LIST_INTERVAL: number = 2000;
+  private loading;
 
   private wifiManagementPermissions: string[] = [
     this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION,
@@ -29,14 +39,16 @@ export class HomePage {
   ];
 
   constructor(public platform: Platform, private androidPermissions: AndroidPermissions,
-              public alertCtrl: AlertController) {
+              private loadingCtrl: LoadingController, public alertCtrl: AlertController,
+              private toastCtrl: ToastController) {
   }
 
   ionViewDidLoad() {
     if (this.platform.is('android')) {
       this.checkPermissions();
     } else if (this.platform.is('ios')) {
-      this.getWifiNetworksList();
+      this.scanStarted = true;
+      this.getNetworksList();
     } else {
       this.showAlert('Error', 'This app must run in an Android or iOS device')
     }
@@ -67,7 +79,6 @@ export class HomePage {
                 'to manage wifi sensor until you give this permission');
             } else {
               this.permissionGranted = true;
-              this.getWifiNetworksList();
             }
           },
           (err) => {
@@ -79,29 +90,67 @@ export class HomePage {
     if (permissionName === this.androidPermissions.PERMISSION.ACCESS_FINE_LOCATION
       && hasPermission) {
       this.permissionGranted = true;
-      this.getWifiNetworksList();
     }
   }
 
-  private getWifiNetworksList = () => {
-    //TODO: add loading
-    this.getWiFiPlugin().startWifiScan((res) => {
-      this.availableNetworks = res;
+  getCurrentSSID = () => {
+    this.showLoading('Loading available wifi access points...');
+    this.getWiFiPlugin().getCurrentSSID((res) => {
+      this.dismissLoading();
+      this.presentToast(`Current SSID: ${res || 'none'}`);
     }, (err) => {
       console.log('error', err);
-    }, this.GET_NEW_NETWORKS_LIST_INTERVAL, this.skipEmptySSIDs);
+      this.dismissLoading();
+    });
   };
 
-  private connect() {
+  //only needed for Android
+  startScan = () => {
+    this.getWiFiPlugin().startWifiScan(
+      () => {
+        this.scanStarted = true;
+        this.presentToast('scan started');
+      }, (err) => {
+        this.presentToast(`error: ${err}`);
+      });
+  };
+
+  //only needed for Android
+  stopWifiScan = () => {
+    this.getWiFiPlugin().startWifiScan(
+      () => {
+        this.scanStarted = false;
+        this.presentToast('scan stopped');
+      }, (err) => {
+        this.presentToast(`error: ${err}`);
+      });
+  };
+
+  getNetworksList = () => {
+    this.showLoading('Loading available wifi access points...');
+    this.getWiFiPlugin().getAvailableNetworksList((res) => {
+      this.availableNetworks = res;
+      this.dismissLoading();
+    }, (err) => {
+      console.log('error', err);
+      this.dismissLoading();
+    }, this.skipEmptySSIDs);
+  };
+
+  connect() {
+    this.showLoading(`Connecting to ${this.selectedNetwork.SSID}`);
     this.getWiFiPlugin().connect((res) => {
       console.log('CONNECT RESPONSE', res);
 
       if (res && res.includes('connected')) {
+        this.connectedToAccessPoint = true;
         this.getWiFiPlugin().stopWifiScan();
+        this.dismissLoading();
         this.showAlert('Success', 'Network connected');
       }
     }, (err) => {
       console.log('error trying to connect: ', err);
+      this.dismissLoading();
 
       if (err) {
         let resultsMap = {
@@ -113,21 +162,53 @@ export class HomePage {
         this.getWiFiPlugin().stopWifiScan();
         this.showAlert('Error', resultsMap[err]);
       }
-    }, this.selectedNetwork.ssid, this.password, this.avoidReconnectionIfSuccess);
+    }, this.selectedNetwork.SSID, this.password, this.avoidReconnectionIfSuccess);
   }
+
+  disconnect = () => {
+    this.showLoading('Disconnecting...');
+    this.getWiFiPlugin().disconnect((res) => {
+      this.connectedToAccessPoint = false;
+      this.dismissLoading();
+    }, (err) => {
+      console.log('error', err);
+      this.dismissLoading();
+    });
+  };
 
   private getWiFiPlugin() {
     // @ts-ignore
     return window.cordova.plugins.WifiManagerPlugin;
   }
 
+  private showLoading(msg) {
+    this.loading = this.loadingCtrl.create({
+      content: msg
+    });
+    this.loading.present();
+  }
+
+  private dismissLoading() {
+    this.loading.dismiss();
+  }
+
+  presentToast(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000,
+      position: 'bottom'
+    });
+
+    toast.present();
+  }
+
   private showAlert = (title, message) => {
-    const prompt = this.alertCtrl.create({
+    const alert = this.alertCtrl.create({
       title: title,
       message: message,
       buttons: ['OK']
     });
-    prompt.present();
+    alert.present();
   }
 
 }
