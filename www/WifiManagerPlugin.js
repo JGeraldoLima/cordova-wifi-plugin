@@ -4,33 +4,27 @@ let WifiManagerPlugin = function (require, exports, module) {
   const PLUGIN_NAME = 'CordovaWifiManager';
 
   const START_SCAN_CMD = 'startWifiScan'; //only for Android
-  const GET_CURRENT_SCAN_LIST_CMD = 'getAvailableNetworksList';
+  const GET_CURRENT_SCAN_LIST_CMD = 'getAvailableNetworksList'; // for now, only for Android
   const STOP_SCAN_CMD = 'stopWifiScan'; //only for Android
   const CONNECT_CMD = 'connect';
   const CHECK_CONNECTION_STATUS_CMD = 'checkConnection';
   const DISCONNECT_CMD = 'disconnect';
   const GET_CURRENT_SSID_CMD = 'getCurrentSSID';
 
-  let getScanResultsIntervalId;
   let getWifiConnectionStatusIntervalId;
 
   function WifiManagerPlugin() {
   }
 
-  WifiManagerPlugin.prototype.startWifiScan = function (success, failure, interval, skipEmptySSIDs) {
+  WifiManagerPlugin.prototype.startWifiScan = function (success, failure) {
     exec(success, failure, PLUGIN_NAME, START_SCAN_CMD, []);
+  };
 
-    getScanResultsIntervalId = setInterval(function () {
-      exec(success, failure, PLUGIN_NAME, GET_CURRENT_SCAN_LIST_CMD, [{"skipEmptySSIDs": skipEmptySSIDs}]);
-    }, interval || 2000);
+  WifiManagerPlugin.prototype.getAvailableNetworksList = function (success, failure, skipEmptySSIDs) {
+    exec(success, failure, PLUGIN_NAME, GET_CURRENT_SCAN_LIST_CMD, [{"skipEmptySSIDs": skipEmptySSIDs}]);
   };
 
   WifiManagerPlugin.prototype.stopWifiScan = function (success, failure) {
-    if (getScanResultsIntervalId) {
-      clearInterval(getScanResultsIntervalId);
-      getScanResultsIntervalId = null;
-    }
-
     if (getWifiConnectionStatusIntervalId) {
       clearInterval(getWifiConnectionStatusIntervalId);
       getWifiConnectionStatusIntervalId = null;

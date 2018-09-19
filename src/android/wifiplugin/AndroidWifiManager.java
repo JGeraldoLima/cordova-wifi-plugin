@@ -62,7 +62,7 @@ public class AndroidWifiManager extends CordovaPlugin {
     private int SCANNING_STATUS_CURRENT_COUNT = 0;
     private int INACTIVE_STATUS_CURRENT_COUNT = 0;
 
-
+    //CHECK: need to be parameterized?
     private final int SCAN_FREQUENCY = 5000;
 
     private boolean scanEnabled = false;
@@ -353,6 +353,7 @@ public class AndroidWifiManager extends CordovaPlugin {
         wifiManager.disableNetwork(lastBlockedNetworkId);
     }
 
+    // TODO: give support to other networks types besides WAP
     private boolean connectToNetwork(JSONObject networkData) {
         if (!wifiManager.isWifiEnabled()) {
             callbackContext.error(WIFI_IS_DISABLED_ERROR);
